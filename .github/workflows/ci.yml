@@ -8,3 +8,5 @@ jobs:
   ci:
     uses: selfshop-dev/.github/.github/workflows/ci.yml@v1
     secrets: inherit
+    permissions:
+      contents: read
