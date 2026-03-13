@@ -1,0 +1,11 @@
+name: Security
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'
+  pull_request:
+    branches: [ dev, main ]
+
+jobs:
+  security:
+    uses: selfshop-dev/.github/.github/workflows/security.yml@v1
