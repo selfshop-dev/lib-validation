@@ -1,0 +1,31 @@
+version: 2
+
+updates:
+  - package-ecosystem: "gomod"
+    assignees: [ "imidll" ]
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    target-branch: "dev"
+    labels: [ '🤖 Dependencies' ]
+    commit-message:
+      prefix: "chore"
+    open-pull-requests-limit: 5
+    groups:
+      go-dependencies:
+        patterns: [ "*" ]
+
+  - package-ecosystem: "github-actions"
+    assignees: [ "imidll" ]
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    target-branch: "dev"
+    labels: [ '🛡️ Infrastructure / CI' ]
+    commit-message:
+      prefix: "ci"
+    open-pull-requests-limit: 5
