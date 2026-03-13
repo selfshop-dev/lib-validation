@@ -13,3 +13,9 @@ jobs:
   labeler:
     uses: selfshop-dev/.github/.github/workflows/labeler.yml@v1
     secrets: inherit
+    permissions:
+      contents: read
+      statuses: write
+      issues: write
+      checks: write
+      pull-requests: write

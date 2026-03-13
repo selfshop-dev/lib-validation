@@ -10,3 +10,6 @@ jobs:
   release:
     uses: selfshop-dev/.github/.github/workflows/release-drafter.yml@v1
     secrets: inherit
+    permissions:
+      contents: write
+      pull-requests: write
