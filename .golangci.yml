@@ -1,0 +1,240 @@
+version: "2"
+
+run: # https://golangci-lint.run/docs/configuration/file/#run-configuration
+  timeout: 5m
+  modules-download-mode: readonly
+
+linters: # https://golangci-lint.run/docs/configuration/file/#linters-configuration
+  default: none
+  enable:
+    - errcheck    # https://golangci-lint.run/docs/linters/configuration/#errcheck
+    - intrange    # https://golangci-lint.run/docs/linters/configuration/#intrange
+    - makezero    # https://golangci-lint.run/docs/linters/configuration/#makezero
+    - reassign    # https://golangci-lint.run/docs/linters/configuration/#reassign
+    - errorlint   # https://golangci-lint.run/docs/linters/configuration/#errorlint
+    - recvcheck   # https://golangci-lint.run/docs/linters/configuration/#recvcheck
+    - govet       # https://golangci-lint.run/docs/linters/configuration/#govet
+    - noctx       # https://golangci-lint.run/docs/linters/configuration/#noctx
+    - staticcheck # https://golangci-lint.run/docs/linters/configuration/#staticcheck
+    - ineffassign # https://golangci-lint.run/docs/linters/configuration/#ineffassign
+    - copyloopvar # https://golangci-lint.run/docs/linters/configuration/#copyloopvar
+    - unused      # https://golangci-lint.run/docs/linters/configuration/#unused
+    - nilnil      # https://golangci-lint.run/docs/linters/configuration/#nilnil
+    - nilerr      # https://golangci-lint.run/docs/linters/configuration/#nilerr
+    - nilnesserr  # https://golangci-lint.run/docs/linters/configuration/#nilnesserr
+    - fatcontext  # https://golangci-lint.run/docs/linters/configuration/#fatcontext
+
+    - gosec   # https://golangci-lint.run/docs/linters/configuration/#gosec
+    - bidichk # https://golangci-lint.run/docs/linters/configuration/#bidichk
+
+    - revive     # https://golangci-lint.run/docs/linters/configuration/#revive
+    - gocritic   # https://golangci-lint.run/docs/linters/configuration/#gocritic
+    - misspell   # https://golangci-lint.run/docs/linters/configuration/#misspell
+    - dupword    # https://golangci-lint.run/docs/linters/configuration/#dupword
+    - whitespace # https://golangci-lint.run/docs/linters/configuration/#whitespace
+    - nolintlint # https://golangci-lint.run/docs/linters/configuration/#nolintlint
+    - godot      # https://golangci-lint.run/docs/linters/configuration/#godot
+
+    - cyclop # https://golangci-lint.run/docs/linters/configuration/#cyclop
+    - nestif # https://golangci-lint.run/docs/linters/configuration/#nestif
+    - funlen # https://golangci-lint.run/docs/linters/configuration/#funlen
+
+    - gochecknoglobals # https://golangci-lint.run/docs/linters/configuration/#gochecknoglobals
+    - prealloc         # https://golangci-lint.run/docs/linters/configuration/#prealloc
+    - nakedret         # https://golangci-lint.run/docs/linters/configuration/#nakedret
+    - wrapcheck        # https://golangci-lint.run/docs/linters/configuration/#wrapcheck
+    - err113           # https://golangci-lint.run/docs/linters/configuration/#err113
+    - unparam          # https://golangci-lint.run/docs/linters/configuration/#unparam
+    - errname          # https://golangci-lint.run/docs/linters/configuration/#errname
+    - forcetypeassert  # https://golangci-lint.run/docs/linters/configuration/#forcetypeassert
+    - exhaustive       # https://golangci-lint.run/docs/linters/configuration/#exhaustive
+    - nonamedreturns   # https://golangci-lint.run/docs/linters/configuration/#nonamedreturns
+    - gochecksumtype   # https://golangci-lint.run/docs/linters/configuration/#gochecksumtype
+
+    - testifylint      # https://golangci-lint.run/docs/linters/configuration/#testifylint
+    - testableexamples # https://golangci-lint.run/docs/linters/configuration/#testableexamples
+    - paralleltest     # https://golangci-lint.run/docs/linters/configuration/#paralleltest
+    - thelper          # https://golangci-lint.run/docs/linters/configuration/#thelper
+    - tparallel        # https://golangci-lint.run/docs/linters/configuration/#tparallel
+
+    - loggercheck # https://golangci-lint.run/docs/linters/configuration/#loggercheck
+
+    - bodyclose         # https://golangci-lint.run/docs/linters/configuration/#bodyclose
+    - nosprintfhostport # https://golangci-lint.run/docs/linters/configuration/#nosprintfhostport
+    - canonicalheader   # https://golangci-lint.run/docs/linters/configuration/#canonicalheader
+ 
+    - sqlclosecheck # https://golangci-lint.run/docs/linters/configuration/#sqlclosecheck
+    - rowserrcheck  # https://golangci-lint.run/docs/linters/configuration/#rowserrcheck
+
+    - perfsprint    # https://golangci-lint.run/docs/linters/configuration/#perfsprint
+    - exptostd      # https://golangci-lint.run/docs/linters/configuration/#exptostd
+    - mirror        # https://golangci-lint.run/docs/linters/configuration/#mirror
+    - usestdlibvars # https://golangci-lint.run/docs/linters/configuration/#usestdlibvars
+
+    - godoclint  # https://golangci-lint.run/docs/linters/configuration/#godoclint
+    - modernize  # https://golangci-lint.run/docs/linters/configuration/#modernize
+    - tagalign   # https://golangci-lint.run/docs/linters/configuration/#tagalign
+    - musttag    # https://golangci-lint.run/docs/linters/configuration/#musttag
+    - usetesting # https://golangci-lint.run/docs/linters/configuration/#usetesting
+    - asciicheck # https://golangci-lint.run/docs/linters/configuration/#asciicheck
+
+    - gocheckcompilerdirectives # https://golangci-lint.run/docs/linters/configuration/#gocheckcompilerdirectives
+
+  settings:
+    errcheck:
+      # Report about not checking of errors in type assertions: `a := b.(MyStruct)`.
+      # Such cases aren't reported by default.
+      check-type-assertions: true # Default: false
+      # report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`.
+      # Such cases aren't reported by default.
+      check-blank: true # Default: false
+
+    govet:
+      # Enable all analyzers.
+      enable-all: true # Default: false
+    
+    fatcontext:
+      # Check for potential fat contexts in struct pointers.
+      check-struct-pointers: true # Default: false
+
+    copyloopvar:
+      # Check all assigning the loop variable to another variable.
+      check-alias: true # Default: false
+
+    gosec:
+      # To specify a set of rules to explicitly exclude.
+      # Available rules: https://github.com/securego/gosec#available-rules
+      excludes: # Default: []
+        - G103 # Use of unsafe calls should be audited
+        - G204 # Subprocess launched with variable
+        - G304 # Potential file inclusion via variable
+
+    revive:
+      # Revive handles the default rules in a way that can be unexpected:
+      # - If there are no explicit rules, the default rules are used.
+      # - If there is at least one explicit rule, the default rules are not used, unless `enable-default-rules` is `true`.
+      # Run `GL_DEBUG=revive golangci-lint run --enable-only=revive` to see default, all available rules, and enabled rules.
+      rules:
+        - name: exported
+        - name: error-return
+        - name: if-return
+        - name: var-naming
+        - name: increment-decrement
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: empty-block
+        - name: error-strings
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: unused-parameter
+        - name: superfluous-else
+        - name: unreachable-code
+        - name: redefines-builtin-id
+
+    gocritic:
+      # Enable multiple checks by tags in addition to default checks.
+      # Run `GL_DEBUG=gocritic golangci-lint run --enable=gocritic` to see all tags and checks.
+      # See https://github.com/go-critic/go-critic#usage -> section "Tags".
+      enabled-tags: # Default: []
+        - diagnostic
+        - style
+        - performance
+
+    nolintlint:
+      # Enable to require an explanation of nonzero length after each nolint directive.
+      require-explanation: true # Default: false
+      # Enable to require nolint directives to mention the specific linter being suppressed.
+      require-specific: true # Default: false
+
+    nestif:
+      # Minimal complexity of if statements to report.
+      min-complexity: 4 # Default: 5
+
+    funlen:
+      # Checks the number of lines in a function.
+      lines: 80 # Default: 60
+      # Checks the number of statements in a function.
+      statements: 50 # Default: 40
+
+    wrapcheck:
+      # An array of strings that specify substrings of signatures to ignore.
+      # If this set, it will override the default set of ignored signatures.
+      # See https://github.com/tomarrell/wrapcheck#configuration for more information.
+      ignore-sigs:
+        - .Errorf(
+        - errors.New(
+        - errors.Unwrap(
+        - errors.Join(
+
+    exhaustive:
+      # Presence of "default" case in switch statements satisfies exhaustiveness,
+      # even if all enum members are not listed.
+      default-signifies-exhaustive: true # Default: false
+
+    musttag:
+      # A set of custom functions to check in addition to the builtin ones.
+      functions: # Default: json, xml, gopkg.in/yaml.v3, BurntSushi/toml, mitchellh/mapstructure, jmoiron/sqlx
+        - name: encoding/json.Marshal
+          tag: json
+        - name: encoding/json.Unmarshal
+          tag: json
+
+    perfsprint:
+      # Go 1.26 optimized `fmt.Errorf` to use `errors.New` under the hood, no performance difference anymore
+      errorf: false
+
+    tagalign:
+      # Specify the order of tags, the other tags will be sorted by name.
+      # This option will be ignored if `sort` is false.
+      order: # Default: []
+        - mapstructure
+        - koanf
+        - validate
+        - env
+        - xml
+        - json
+        - yaml
+        - toml
+
+  exclusions:
+    presets:
+      - std-error-handling
+    rules:
+      - path: '_test\.go'
+        linters:
+          - gocritic
+          - funlen
+          - cyclop
+          - err113
+          - wrapcheck
+          - gochecknoglobals
+ 
+      - path: '[_.]mock\.go'
+        linters:
+          - all
+
+      - path: '\.pb\.go'
+        linters:
+          - all
+
+      - path: '\.gen\.go'
+        linters:
+          - all
+
+issues: # https://golangci-lint.run/docs/configuration/file/#issues-configuration
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+formatters: # https://golangci-lint.run/docs/configuration/file/#formatters-configuration
+  enable:
+    - gofmt     # https://golangci-lint.run/docs/formatters/configuration/#gofmt
+    - goimports # https://golangci-lint.run/docs/formatters/configuration/#goimports
+  
+  settings:
+    goimports:
+      # A list of prefixes, which, if set, checks import paths
+      # with the given prefixes are grouped after 3rd-party packages.
+      local-prefixes: # Default: []
+        - github.com/selfshop-dev/tpl-seed
