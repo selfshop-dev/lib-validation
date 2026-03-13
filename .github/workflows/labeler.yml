@@ -1,0 +1,15 @@
+name: Labeler
+
+on:
+  pull_request_target:
+    types: [ opened, reopened, synchronize, edited ]
+    branches: [ main, dev ]
+  issues:
+    types: [ opened, edited ]
+  issue_comment:
+    types: [ created, edited ]
+
+jobs:
+  labeler:
+    uses: selfshop-dev/.github/.github/workflows/labeler.yml@v1
+    secrets: inherit
