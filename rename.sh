@@ -10,7 +10,7 @@ if [[ $# -ne 1 ]]; then
   exit 1
 fi
 
-OLD="tpl-seed"
+OLD="lib-validation"
 NEW="$1"
 
 if [[ -z "$NEW" ]]; then
