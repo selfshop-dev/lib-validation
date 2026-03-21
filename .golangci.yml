@@ -249,4 +249,4 @@ formatters: # https://golangci-lint.run/docs/configuration/file/#formatters-conf
       # A list of prefixes, which, if set, checks import paths
       # with the given prefixes are grouped after 3rd-party packages.
       local-prefixes: # Default: []
-        - github.com/selfshop-dev/tpl-seed
+        - github.com/selfshop-dev/lib-validation
