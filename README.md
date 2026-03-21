@@ -113,6 +113,30 @@ fes    := ve.FieldsFor("email") // все ошибки для поля
 codes  := ve.Codes()            // уникальные code-значения по всем полям
 ```
 
+## Производительность
+
+Результаты (`go test -bench=. -benchmem`):
+
+```
+BenchmarkCollector_Check-12                        1 362 531       872 ns/op      712 B/op      7 allocs/op
+BenchmarkCollector_Merge_Small-12                  3 313 310       396 ns/op      384 B/op      6 allocs/op
+BenchmarkCollector_Merge_Large-12                    475 430      2476 ns/op     2328 B/op     41 allocs/op
+BenchmarkCollector_Merge_NonValidationError-12     6 946 731       157 ns/op      288 B/op      1 allocs/op
+BenchmarkError_Error_Single-12                     8 621 154       136 ns/op      144 B/op      2 allocs/op
+BenchmarkError_Error_Many-12                       1 804 233       667 ns/op      992 B/op      2 allocs/op
+BenchmarkError_Codes-12                            2 010 572       597 ns/op      632 B/op      4 allocs/op
+BenchmarkError_FieldsFor-12                       10 415 594       119 ns/op       80 B/op      1 allocs/op
+BenchmarkFieldError_WithMetaPair_NilMeta-12       23 092 011        51 ns/op        0 B/op      0 allocs/op
+BenchmarkFieldError_WithMetaPair_ExistingMeta-12  10 368 457       111 ns/op        0 B/op      0 allocs/op
+```
+
+Несколько ориентиров:
+
+- **`Check`** — типичный validation pass из трёх полей обходится в ~872 ns и 7 аллокаций; большая часть стоимости — аллокация самого `Collector` и `FieldError`-ов с `Meta`-map.
+- **`Merge_Small` / `Merge_Large`** — линейный рост по количеству полей; `strings.Builder` с `Reset` между итерациями удерживает аллокации на минимуме.
+- **`Error()` / `FieldsFor`** — `strings.Builder` с предварительным `Grow` даёт константное число аллокаций независимо от количества полей.
+- **`WithMetaPair`** — нулевые аллокации когда `Meta == nil` (fast path) и при копировании существующей map (компилятор инлайнит `maps.Copy` для малых map).
+
 ## Безопасность относительно nil
 
 Все функции, принимающие `error`-аргументы — `As`, `Is`, `Collector.Merge` — обрабатывают `nil` как "нет ошибки" и возвращают zero/false значения без паники. Это позволяет писать:
