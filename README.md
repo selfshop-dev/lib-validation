@@ -101,6 +101,10 @@ c := validation.NewCollector("invalid user")
 // Добавить ошибку если условие ложно
 c.Check(req.Name != "", validation.Required("name"))
 
+// Добавить ошибку если условие истинно — удобно когда условие описывает нарушение
+c.Fail(len(req.Name) < minLen, validation.TooShort("name", minLen))
+c.Fail(len(req.Name) > maxLen, validation.TooLong("name", maxLen))
+
 // Добавить безусловно
 c.Add(validation.Required("email"))
 
