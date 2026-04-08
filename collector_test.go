@@ -58,6 +58,46 @@ func TestCollector_Check_Chainable(t *testing.T) {
 	assert.Len(t, c.Validation().Fields, 2)
 }
 
+func TestCollector_Fail(t *testing.T) {
+	t.Parallel()
+
+	testCases := [...]struct {
+		name      string
+		bad       bool
+		wantCount int
+	}{
+		{name: "bad=true adds error", bad: true, wantCount: 1},
+		{name: "bad=false does not add error", bad: false, wantCount: 0},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+			c := validation.NewCollector("summary")
+			c.Fail(tc.bad, validation.Required("field"))
+
+			if tc.wantCount == 0 {
+				assert.NoError(t, c.Err())
+			} else {
+				require.Error(t, c.Err())
+				assert.Len(t, c.Validation().Fields, tc.wantCount)
+			}
+		})
+	}
+}
+
+func TestCollector_Fail_Chainable(t *testing.T) {
+	t.Parallel()
+
+	c := validation.NewCollector("invalid user")
+	c.Fail(true, validation.Required("email")).
+		Fail(true, validation.Required("name")).
+		Fail(false, validation.Required("age"))
+
+	require.NotNil(t, c.Validation())
+	assert.Len(t, c.Validation().Fields, 2)
+}
+
 func TestCollector_Add(t *testing.T) {
 	t.Parallel()
 
