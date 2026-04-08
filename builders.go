@@ -2,7 +2,7 @@ package validation
 
 import "fmt"
 
-// Required returns a FieldError for a missing/zero-value field.
+// Required returns a [FieldError] for a missing/zero-value field.
 func Required(field string) FieldError {
 	return FieldError{
 		Field:   field,
@@ -11,12 +11,12 @@ func Required(field string) FieldError {
 	}
 }
 
-// Invalid returns a FieldError for a present but invalid value.
+// Invalid returns a [FieldError] for a present but invalid value.
 func Invalid(field, reason string) FieldError {
 	return FieldError{Field: field, Code: CodeInvalid, Message: reason}
 }
 
-// Unknown returns a FieldError for an unrecognised field/key.
+// Unknown returns a [FieldError] for an unrecognised field/key.
 // Primary consumer: lib-config strict-mode unknown key detection.
 func Unknown(field string) FieldError {
 	return FieldError{
@@ -26,12 +26,12 @@ func Unknown(field string) FieldError {
 	}
 }
 
-// Conflict returns a FieldError for a value conflicting with existing state.
+// Conflict returns a [FieldError] for a value conflicting with existing state.
 func Conflict(field, reason string) FieldError {
 	return FieldError{Field: field, Code: CodeConflict, Message: reason}
 }
 
-// TooLong returns a FieldError for a string/slice exceeding maxLen length.
+// TooLong returns a [FieldError] for a string/slice exceeding maxLen length.
 func TooLong(field string, maxLen int) FieldError {
 	return FieldError{
 		Field:   field,
@@ -41,7 +41,7 @@ func TooLong(field string, maxLen int) FieldError {
 	}
 }
 
-// TooShort returns a FieldError for a string/slice below minLen length.
+// TooShort returns a [FieldError] for a string/slice below minLen length.
 func TooShort(field string, minLen int) FieldError {
 	return FieldError{
 		Field:   field,
@@ -51,7 +51,7 @@ func TooShort(field string, minLen int) FieldError {
 	}
 }
 
-// OutOfRange returns a FieldError for a numeric value outside [minVal, maxVal].
+// OutOfRange returns a [FieldError] for a numeric value outside [minVal, maxVal].
 func OutOfRange(field string, minVal, maxVal any) FieldError {
 	return FieldError{
 		Field:   field,
@@ -61,7 +61,7 @@ func OutOfRange(field string, minVal, maxVal any) FieldError {
 	}
 }
 
-// Immutable returns a FieldError for a field that cannot change after creation.
+// Immutable returns a [FieldError] for a field that cannot change after creation.
 func Immutable(field string) FieldError {
 	return FieldError{
 		Field:   field,
@@ -70,7 +70,7 @@ func Immutable(field string) FieldError {
 	}
 }
 
-// TypeMismatch returns a FieldError for a wrong-type value.
+// TypeMismatch returns a [FieldError] for a wrong-type value.
 func TypeMismatch(field, expected string) FieldError {
 	return FieldError{
 		Field:   field,
@@ -80,7 +80,7 @@ func TypeMismatch(field, expected string) FieldError {
 	}
 }
 
-// Entity returns a top-level FieldError not attributable to a specific field.
+// Entity returns a top-level [FieldError] not attributable to a specific field.
 func Entity(code Code, message string) FieldError {
 	return FieldError{Code: code, Message: message}
 }
