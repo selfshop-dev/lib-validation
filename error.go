@@ -27,7 +27,10 @@ type Error struct {
 	Fields  []FieldError `json:"fields,omitempty"`
 }
 
-// New creates an empty Error with a summary message.
+// Compile-time check: [*Error] implements the error interface.
+var _ error = (*Error)(nil) //nolint:errcheck // blank identifier is intentional: compile-time interface check
+
+// New creates an empty [*Error] with a summary message.
 func New(summary string) *Error {
 	return &Error{
 		Summary: summary,
@@ -35,7 +38,7 @@ func New(summary string) *Error {
 	}
 }
 
-// Add appends one or more FieldErrors to the Error.
+// Add appends one or more FieldErrors to the [Error].
 func (e *Error) Add(fes ...FieldError) {
 	e.Fields = append(e.Fields, fes...)
 }
@@ -100,7 +103,7 @@ func (e *Error) First(field string) (FieldError, bool) {
 	return FieldError{}, false
 }
 
-// FirstWithCode returns the first FieldError for the given field path and code,
+// FirstWithCode returns the first [FieldError] for the given field path and code,
 // or (zero, false) if no match is found.
 //
 // Use when a single field may carry multiple errors of different codes and you
@@ -136,15 +139,15 @@ func (e *Error) Codes() []Code {
 	return out
 }
 
-// As is a typed convenience wrapper around errors.As.
-// Prefer this over the standard errors.As when you need the concrete *Error
-// for field inspection (First, FieldsFor, Codes). Use the standard errors.Is
+// As is a typed convenience wrapper around [errors.As].
+// Prefer this over the standard [errors.As] when you need the concrete [*Error]
+// for field inspection (First, FieldsFor, Codes). Use the standard [errors.Is]
 // pattern only when you need to check presence without inspecting fields.
 //
-// Note: As returns (nil, false) for a nil error argument — it does not panic.
+// Note: [As] returns (nil, false) for a nil error argument — it does not panic.
 func As(err error) (*Error, bool) {
 	return errors.AsType[*Error](err)
 }
 
-// Is reports whether err chain contains a *Error.
-func Is(err error) bool { _, ok := As(err); return ok } //nolint:errcheck // *Error is not an error return value; blank is intentional
+// Is reports whether err chain contains a [*Error].
+func Is(err error) bool { _, ok := As(err); return ok } //nolint:errcheck // [*Error] is not an error return value; blank is intentional

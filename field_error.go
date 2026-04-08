@@ -28,6 +28,9 @@ type FieldError struct {
 	Value string `json:"value,omitempty"` // omit for sensitive fields
 }
 
+// Compile-time check: [*FieldError] implements the error interface.
+var _ error = FieldError{}
+
 func (fe FieldError) Error() string {
 	// Pre-calculate capacity: "[" + code + "] " + field? + message
 	var b strings.Builder
@@ -52,7 +55,7 @@ func (fe FieldError) WithValue(v string) FieldError {
 }
 
 // WithMetaPair returns a copy with an additional metadata key set.
-// Always allocates a new map so the original FieldError is never mutated.
+// Always allocates a new map so the original [FieldError] is never mutated.
 func (fe FieldError) WithMetaPair(key string, value any) FieldError {
 	dst := make(map[string]any, len(fe.Meta)+1)
 	maps.Copy(dst, fe.Meta)
