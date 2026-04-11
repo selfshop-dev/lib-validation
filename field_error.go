@@ -28,7 +28,7 @@ type FieldError struct {
 	Value string `json:"value,omitempty"` // omit for sensitive fields
 }
 
-// Compile-time check: [*FieldError] implements the error interface.
+// Compile-time check: *[FieldError] implements the error interface.
 var _ error = FieldError{}
 
 func (fe FieldError) Error() string {

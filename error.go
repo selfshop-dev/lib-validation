@@ -27,10 +27,10 @@ type Error struct {
 	Fields  []FieldError `json:"fields,omitempty"`
 }
 
-// Compile-time check: [*Error] implements the error interface.
+// Compile-time check: *[Error] implements the error interface.
 var _ error = (*Error)(nil) //nolint:errcheck // blank identifier is intentional: compile-time interface check
 
-// New creates an empty [*Error] with a summary message.
+// New creates an empty *[Error] with a summary message.
 func New(summary string) *Error {
 	return &Error{
 		Summary: summary,
@@ -140,7 +140,7 @@ func (e *Error) Codes() []Code {
 }
 
 // As is a typed convenience wrapper around [errors.As].
-// Prefer this over the standard [errors.As] when you need the concrete [*Error]
+// Prefer this over the standard [errors.As] when you need the concrete *[Error]
 // for field inspection (First, FieldsFor, Codes). Use the standard [errors.Is]
 // pattern only when you need to check presence without inspecting fields.
 //
@@ -149,5 +149,5 @@ func As(err error) (*Error, bool) {
 	return errors.AsType[*Error](err)
 }
 
-// Is reports whether err chain contains a [*Error].
-func Is(err error) bool { _, ok := As(err); return ok } //nolint:errcheck // [*Error] is not an error return value; blank is intentional
+// Is reports whether err chain contains a *[Error].
+func Is(err error) bool { _, ok := As(err); return ok } //nolint:errcheck // *[Error] is not an error return value; blank is intentional

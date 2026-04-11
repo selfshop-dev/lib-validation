@@ -28,7 +28,7 @@
 //	    // ve.Summary is the top-level human-readable message
 //	}
 //
-// When you need the concrete [*Error] for field inspection without going
+// When you need the concrete *[Error] for field inspection without going
 // through the error interface, use [Collector.Validation]:
 //
 //	if ve := c.Validation(); ve != nil {
