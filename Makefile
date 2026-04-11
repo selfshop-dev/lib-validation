@@ -22,7 +22,7 @@ lint: ## Запустить линтер
 test: ## Запустить тесты с покрытием
 	go generate ./...
 	go test -race -coverprofile=coverage.out -covermode=atomic \
-		$(shell go list ./... | grep -v -E '/(vendor|gen|cmd|testdata|mocks)/')
+		$(shell go list ./... | grep -v -E '/(vendor|gen|cmd|testdata|mocks)(/|$$)')
 	sed -i -E '/\/gen\/|_mock\.go:|\.pb(\.gw)?\.go:|\.sql\.go:|\.gen\.go:/d' coverage.out || true
 	go tool cover -func=coverage.out | tee coverage.humanize | tail -1
 
