@@ -33,6 +33,7 @@ profile.cov
 # Generated files — never commit, always regenerate
 *_mock.go
 gen/
+mocks/
 
 # Explicit suffixes for generated files outside gen/ (edge cases)
 *.pb.go
