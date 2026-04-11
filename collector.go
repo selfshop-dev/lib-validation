@@ -80,7 +80,7 @@ func (c *Collector) Merge(namespace string, incoming error) *Collector {
 	return c
 }
 
-// Err returns [*Error] if any fields were collected, nil otherwise.
+// Err returns *[Error] if any fields were collected, nil otherwise.
 func (c *Collector) Err() error {
 	if c.err.HasErrors() {
 		return c.err
@@ -88,7 +88,7 @@ func (c *Collector) Err() error {
 	return nil
 }
 
-// Validation returns [*Error] directly (not error interface) for field inspection.
+// Validation returns *[Error] directly (not error interface) for field inspection.
 func (c *Collector) Validation() *Error {
 	if c.err.HasErrors() {
 		return c.err
