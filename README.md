@@ -6,7 +6,7 @@
 [![Go version](https://img.shields.io/github/go-mod/go-version/selfshop-dev/lib-validation)](go.mod)
 [![License](https://img.shields.io/github/license/selfshop-dev/lib-validation)](LICENSE)
 
-Структурированные ошибки валидации с машиночитаемыми кодами для Go. Без внешних зависимостей. Проект организации [selfshop-dev](https://github.com/selfshop-dev).
+Structured validation errors with machine-readable codes for Go. No external dependencies. A project by [selfshop-dev](https://github.com/selfshop-dev).
 
 ### Installation
 
@@ -16,7 +16,7 @@ go get -u github.com/selfshop-dev/lib-validation
 
 ## Overview
 
-`lib-validation` даёт единый тип `Error`, который несёт все ошибки полей сразу — API-обработчик может сериализовать все проблемы в одном ответе, а клиент переключается на стабильные значения `Code`, не разбирая строки сообщений.
+`lib-validation` provides a single `Error` type that carries all field errors at once — an API handler can serialize every problem in a single response, and clients switch on stable `Code` values instead of parsing message strings.
 
 ```go
 func ValidateUser(req CreateUserRequest) error {
@@ -28,7 +28,7 @@ func ValidateUser(req CreateUserRequest) error {
     return c.Err()
 }
 
-// На принимающей стороне:
+// On the receiving side:
 if ve, ok := validation.As(err); ok {
     for _, fe := range ve.Fields {
         fmt.Printf("%s: [%s] %s\n", fe.Field, fe.Code, fe.Message)
@@ -36,14 +36,14 @@ if ve, ok := validation.As(err); ok {
 }
 ```
 
-Ключевые свойства:
+Key properties:
 
-- **Нет внешних зависимостей** — только стандартная библиотека Go.
-- **Стабильные коды** — `Code` — это часть публичного API-контракта; клиенты могут зависеть от их строковых значений.
-- **Вложенная валидация** — `Merge` автоматически расставляет dot-notation префиксы полей.
-- **Безопасность по умолчанию** — значение поля никогда не попадает в ошибку автоматически; нужен явный вызов `WithValue`.
+- **No external dependencies** — standard library only.
+- **Stable codes** — `Code` is part of the public API contract; clients may depend on their string values.
+- **Nested validation** — `Merge` automatically prefixes field names using dot-notation.
+- **Safe by default** — field values are never included in errors automatically; an explicit `WithValue` call is required.
 
-### Быстрый старт
+### Quick Start
 
 ```go
 import "github.com/selfshop-dev/lib-validation"
@@ -57,113 +57,113 @@ if err := c.Err(); err != nil {
 }
 ```
 
-## Коды ошибок
+## Error Codes
 
-Коды — стабильная часть публичного API. Переименование или удаление кода — это breaking change, требующий мажорного релиза. Добавление новых кодов — безопасно.
+Codes are a stable part of the public API. Renaming or removing a code is a breaking change requiring a major release. Adding new codes is safe.
 
-| Код | Константа | Описание |
+| Code | Constant | Description |
 |---|---|---|
-| `required` | `CodeRequired` | Поле отсутствует или пустое |
-| `invalid` | `CodeInvalid` | Значение присутствует, но некорректно |
-| `too_long` | `CodeTooLong` | Строка или срез превышает максимальную длину |
-| `too_short` | `CodeTooShort` | Строка или срез короче минимальной длины |
-| `out_of_range` | `CodeOutOfRange` | Числовое значение вне допустимого диапазона |
-| `conflict` | `CodeConflict` | Значение конфликтует с существующим состоянием |
-| `immutable` | `CodeImmutable` | Поле нельзя изменить после создания |
-| `type_mismatch` | `CodeTypeMismatch` | Неверный тип значения |
-| `unknown` | `CodeUnknown` | Нераспознанный ключ (используется в lib-config) |
+| `required` | `CodeRequired` | Field is missing or empty |
+| `invalid` | `CodeInvalid` | Value is present but invalid |
+| `too_long` | `CodeTooLong` | String or slice exceeds maximum length |
+| `too_short` | `CodeTooShort` | String or slice is shorter than minimum length |
+| `out_of_range` | `CodeOutOfRange` | Numeric value is outside the allowed range |
+| `conflict` | `CodeConflict` | Value conflicts with existing state |
+| `immutable` | `CodeImmutable` | Field cannot be changed after creation |
+| `type_mismatch` | `CodeTypeMismatch` | Value has the wrong type |
+| `unknown` | `CodeUnknown` | Unrecognized key (used in lib-config) |
 
-## Билдеры
+## Builders
 
-Готовые конструкторы покрывают наиболее частые сценарии и автоматически заполняют `Code`, `Message` и `Meta`.
+Ready-made constructors cover the most common scenarios and automatically populate `Code`, `Message`, and `Meta`.
 
 ```go
-validation.Required("email")                       // поле обязательно
-validation.Invalid("email", "not a valid address") // некорректное значение
+validation.Required("email")                       // field is required
+validation.Invalid("email", "not a valid address") // invalid value
 validation.TooLong("username", 50)                 // Meta: {"max": 50}
 validation.TooShort("password", 8)                 // Meta: {"min": 8}
 validation.OutOfRange("age", 18, 120)              // Meta: {"min": 18, "max": 120}
 validation.Conflict("email", "already taken")
 validation.Immutable("user_id")
-validation.TypeMismatch("count", "integer") // Meta: {"expected_type": "integer"}
+validation.TypeMismatch("count", "integer")        // Meta: {"expected_type": "integer"}
 validation.Unknown("extra_field")
 
-validation.Entity(validation.CodeConflict, "duplicate entry") // ошибка уровня сущности, без поля
+validation.Entity(validation.CodeConflict, "duplicate entry") // entity-level error, no field
 ```
 
 ## Collector
 
-`Collector` накапливает ошибки в ходе прохода по полям и возвращает `*Error` (или `nil`) в конце. Все методы возвращают `*Collector` и поддерживают цепочки вызовов.
+`Collector` accumulates errors during a field-by-field pass and returns `*Error` (or `nil`) at the end. All methods return `*Collector` and support method chaining.
 
 ```go
 c := validation.NewCollector("invalid user")
 
-// Добавить ошибку если условие ложно
+// Add an error if the condition is false
 c.Check(req.Name != "", validation.Required("name"))
 
-// Добавить ошибку если условие истинно — удобно когда условие описывает нарушение
+// Add an error if the condition is true — useful when the condition describes a violation
 c.Fail(len(req.Name) < minLen, validation.TooShort("name", minLen))
 c.Fail(len(req.Name) > maxLen, validation.TooLong("name", maxLen))
 
-// Добавить безусловно
+// Add unconditionally
 c.Add(validation.Required("email"))
 
-// Вложенная валидация с автоматическим префиксом
+// Nested validation with automatic prefix
 c.Merge("shipping_address", validateAddress(req.Address))
-// поле "city" внутри → "shipping_address.city"
+// field "city" inside → "shipping_address.city"
 
-// Получить результат
-err := c.Err()        // error или nil
-ve  := c.Validation() // *Error или nil — для инспекции полей
+// Get the result
+err := c.Err()        // error or nil
+ve  := c.Validation() // *Error or nil — for field inspection
 ```
 
-## Инспекция ошибок
+## Error Inspection
 
-После получения `*Error` доступны несколько методов для поиска по полям.
+Once you have a `*Error`, several methods are available for field lookup.
 
 ```go
-ve, ok := validation.As(err) // достать *Error из цепочки ошибок
-ve.Fields                    // все FieldError
+ve, ok := validation.As(err) // extract *Error from the error chain
+ve.Fields                    // all FieldErrors
 
-ve.First("email")                                     // (FieldError, bool) — первая ошибка поля
-ve.FirstWithCode("password", validation.CodeTooShort) // по полю и коду
+ve.First("email")                                     // (FieldError, bool) — first error for the field
+ve.FirstWithCode("password", validation.CodeTooShort) // by field and code
 
-ve.FieldsFor("email") // все ошибки поля
-ve.Codes()            // уникальные коды по всем полям
+ve.FieldsFor("email") // all errors for a field
+ve.Codes()            // unique codes across all fields
 
-validation.Is(err) // есть ли *Error в цепочке (без инспекции полей)
+validation.Is(err) // whether *Error is present in the chain (without field inspection)
 ```
 
 ## FieldError
 
-`FieldError` описывает одну ошибку валидации. Поле `Field` использует dot-notation и совместимо как с конфигурационными ключами (`database.host`), так и с путями JSON-тела (`user.address.zip_code`). Пустой `Field` означает ошибку уровня сущности.
+`FieldError` describes a single validation error. The `Field` uses dot-notation and is compatible with both config keys (`database.host`) and JSON body paths (`user.address.zip_code`). An empty `Field` denotes an entity-level error.
 
 ```go
 fe := validation.Invalid("status", "unrecognised value")
 
-// Прикрепить безопасное значение для отладки — только для не-чувствительных полей
+// Attach a safe value for debugging — only for non-sensitive fields
 fe = fe.WithValue("PENDING_APPROVAL")
 
-// Добавить метаданные
+// Add metadata
 fe = fe.WithMetaPair("allowed", []string{"active", "inactive"})
 ```
 
-`WithValue` и `WithMetaPair` возвращают копию — оригинальный `FieldError` не мутируется.
+`WithValue` and `WithMetaPair` return a copy — the original `FieldError` is not mutated.
 
-## Вложенная валидация
+## Nested Validation
 
-`Merge` позволяет вызывать отдельные функции валидации для вложенных структур и собирать их ошибки в единый результат с правильными путями полей.
+`Merge` lets you call separate validation functions for nested structs and collect their errors into a single result with correct field paths.
 
 ```go
 c := validation.NewCollector("invalid order")
 c.Merge("shipping_address", validateAddress(req.ShippingAddress))
 c.Merge("billing_address", validateAddress(req.BillingAddress))
 
-// Итоговые пути: "shipping_address.city", "billing_address.zip_code" и т.д.
+// Resulting paths: "shipping_address.city", "billing_address.zip_code", etc.
 ```
 
-Глубина вложенности не ограничена — каждый уровень просто добавляет свой префикс.
+Nesting depth is unlimited — each level simply prepends its own prefix.
 
-## Лицензия
+## License
 
 [`MIT`](LICENSE) © 2026-present [`selfshop-dev`](https://github.com/selfshop-dev)
